@@ -11,6 +11,7 @@ const LogOut = ({ setLoggedIn }: LogOutProps) => {
       if (response.status === 204) {
         setLoggedIn(false);
         sessionStorage.removeItem('loggedIn');
+        sessionStorage.removeItem('email');
       }
     });
   };

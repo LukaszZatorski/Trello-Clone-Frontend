@@ -23,9 +23,9 @@ const LogIn = ({ setLoggedIn }: LogInProps) => {
           password: password,
         })
         .then((response) => {
+          sessionStorage.setItem('email', email);
           setLoggedIn(true);
           sessionStorage.setItem('loggedIn', 'true');
-          console.log(response);
         })
         .catch((error) => {
           if (error.response && error.response.status === 422) {

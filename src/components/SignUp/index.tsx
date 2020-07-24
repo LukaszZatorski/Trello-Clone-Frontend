@@ -6,6 +6,7 @@ type SignUpProps = {
 };
 
 const SignUp = ({ setLoggedIn }: SignUpProps) => {
+  const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,15 +22,16 @@ const SignUp = ({ setLoggedIn }: SignUpProps) => {
     apiClient.get('/sanctum/csrf-cookie').then((response) => {
       apiClient
         .post('/register', {
+          username: username,
           name: name,
           email: email,
           password: password,
           password_confirmation: passwordConfirmation,
         })
         .then((response) => {
+          sessionStorage.setItem('email', email);
           setLoggedIn(true);
           sessionStorage.setItem('loggedIn', 'true');
-          console.log(response);
         })
         .catch((error) => {
           if (error.response && error.response.status === 422) {
@@ -54,11 +56,22 @@ const SignUp = ({ setLoggedIn }: SignUpProps) => {
               <input
                 type='text'
                 name='name'
-                placeholder='Username'
+                placeholder='Full Name'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
                 className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5'
+              />
+            </div>
+            <div className='-mt-px'>
+              <input
+                type='text'
+                name='username'
+                placeholder='Username'
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5'
               />
             </div>
             <div className='-mt-px'>
