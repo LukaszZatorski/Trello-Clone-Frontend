@@ -1,5 +1,6 @@
 import React, { useState, SyntheticEvent } from 'react';
 import apiClient from '../../services/apiClient';
+import { useHistory, useLocation } from 'react-router-dom';
 
 type LogInProps = {
   setLoggedIn: (x: boolean) => void;
@@ -10,6 +11,9 @@ const LogIn = ({ setLoggedIn }: LogInProps) => {
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState(false);
   const [unknownError, setUnknownError] = useState(false);
+  let history = useHistory();
+  let location = useLocation();
+  let { from }: any = location.state || { from: { pathname: '/' } };
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -26,6 +30,7 @@ const LogIn = ({ setLoggedIn }: LogInProps) => {
           sessionStorage.setItem('email', email);
           setLoggedIn(true);
           sessionStorage.setItem('loggedIn', 'true');
+          history.replace(from);
         })
         .catch((error) => {
           if (error.response && error.response.status === 422) {

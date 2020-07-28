@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../../services/apiClient';
+import PrivateRoute from '../../services/privateRoute';
 import {
   BrowserRouter as Router,
   Route,
@@ -11,6 +12,7 @@ import LogIn from '../LogIn';
 import LogOut from '../LogOut';
 import SignUp from '../SignUp';
 import Landing from '../Landing';
+import Boards from '../Boards';
 
 type User = {
   id: number;
@@ -67,11 +69,7 @@ const App = () => {
             <Landing loggedIn={loggedIn}></Landing>
           </Route>
           <Route path='/login'>
-            {loggedIn ? (
-              <Redirect to='/' />
-            ) : (
-              <LogIn setLoggedIn={setLoggedIn}></LogIn>
-            )}
+            <LogIn setLoggedIn={setLoggedIn}></LogIn>
           </Route>
           <Route path='/signup'>
             {loggedIn ? (
@@ -80,6 +78,9 @@ const App = () => {
               <SignUp setLoggedIn={setLoggedIn}></SignUp>
             )}
           </Route>
+          <PrivateRoute path='/boards'>
+            <Boards></Boards>
+          </PrivateRoute>
         </div>
       </div>
     </Router>
