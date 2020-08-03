@@ -6,6 +6,7 @@ import {
   Route,
   Link,
   Redirect,
+  Switch,
 } from 'react-router-dom';
 import './index.css';
 import LogIn from '../LogIn';
@@ -13,6 +14,7 @@ import LogOut from '../LogOut';
 import SignUp from '../SignUp';
 import Landing from '../Landing';
 import Boards from '../Boards';
+import Board from '../Board';
 
 type User = {
   id: number;
@@ -42,7 +44,7 @@ const App = () => {
 
   return (
     <Router>
-      <div className=''>
+      <div className='min-h-screen flex flex-col'>
         <nav className='flex p-2 text-white font-bold justify-between bg-blue-700'>
           <Link to='/'>Main Page</Link>
           <Link className='opacity-75' to='/'>
@@ -64,23 +66,28 @@ const App = () => {
             )}
           </div>
         </nav>
-        <div>
-          <Route exact path='/'>
-            <Landing loggedIn={loggedIn}></Landing>
-          </Route>
-          <Route path='/login'>
-            <LogIn setLoggedIn={setLoggedIn}></LogIn>
-          </Route>
-          <Route path='/signup'>
-            {loggedIn ? (
-              <Redirect to='/' />
-            ) : (
-              <SignUp setLoggedIn={setLoggedIn}></SignUp>
-            )}
-          </Route>
-          <PrivateRoute path='/boards'>
-            <Boards></Boards>
-          </PrivateRoute>
+        <div className='flex flex-col flex-1'>
+          <Switch>
+            <Route exact path='/'>
+              <Landing loggedIn={loggedIn}></Landing>
+            </Route>
+            <Route path='/login'>
+              <LogIn setLoggedIn={setLoggedIn}></LogIn>
+            </Route>
+            <Route path='/signup'>
+              {loggedIn ? (
+                <Redirect to='/' />
+              ) : (
+                <SignUp setLoggedIn={setLoggedIn}></SignUp>
+              )}
+            </Route>
+            <Route path='/boards/:id'>
+              {({ match }) => <Board boardId={match?.params.id}></Board>}
+            </Route>
+            <PrivateRoute path='/boards'>
+              <Boards></Boards>
+            </PrivateRoute>
+          </Switch>
         </div>
       </div>
     </Router>
