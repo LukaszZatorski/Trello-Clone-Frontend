@@ -2,25 +2,32 @@ import React, { useState, SyntheticEvent } from 'react';
 import apiClient from '../../services/apiClient';
 import checkmark from '../../images/icons8-checkmark.svg';
 
-type BoardFormProps = {
-  setModalOn: React.Dispatch<React.SetStateAction<boolean>>;
+type EditBoardProps = {
+  setEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+  board: Board;
 };
 
-const BoardForm = ({ setModalOn }: BoardFormProps) => {
-  const [title, setTitle] = useState('');
-  const [color, setColor] = useState('bg-blue-600');
+type Board = {
+  id: number;
+  title: string;
+  user_id: number;
+  color: string;
+};
+
+const EditBoard = ({ setEditModal, board }: EditBoardProps) => {
+  const [title, setTitle] = useState(board.title);
+  const [color, setColor] = useState(board.color);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
 
     apiClient
-      .post('/api/boards', {
-        email: sessionStorage.getItem('email'),
+      .patch(`/api/boards/${board.id}`, {
         title: title,
         color: color,
       })
       .then((response) => {
-        setModalOn(false);
+        setEditModal(false);
         console.log(response);
       })
       .catch((error) => {
@@ -183,12 +190,12 @@ const BoardForm = ({ setModalOn }: BoardFormProps) => {
                     type='submit'
                     className='inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5'
                   >
-                    Create Board
+                    Update Board
                   </button>
                 </span>
                 <span className='mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto'>
                   <button
-                    onClick={() => setModalOn(false)}
+                    onClick={() => setEditModal(false)}
                     type='button'
                     className='inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5'
                   >
@@ -203,4 +210,5 @@ const BoardForm = ({ setModalOn }: BoardFormProps) => {
     </div>
   );
 };
-export default BoardForm;
+
+export default EditBoard;
