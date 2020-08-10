@@ -3,6 +3,7 @@ import apiClient from '../../services/apiClient';
 import deleteIcon from '../../images/icons8-delete.svg';
 import DeleteBoard from '../DeleteBoard';
 import EditBoard from '../EditBoard';
+import TaskList from '../TaskList';
 
 type BoardProps = {
   boardId: number;
@@ -15,8 +16,16 @@ type Board = {
   color: string;
 };
 
+type TaskList = {
+  id: number;
+  title: string;
+};
+
+type TaskLists = [TaskList];
+
 const Board = ({ boardId }: BoardProps) => {
   const [board, setBoard] = useState<Board>();
+  const [taskLists, setTaskLists] = useState<TaskLists>();
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
 
@@ -24,7 +33,8 @@ const Board = ({ boardId }: BoardProps) => {
     apiClient
       .get(`/api/boards/${boardId}`)
       .then((response) => {
-        setBoard(response.data);
+        setBoard(response.data.board);
+        setTaskLists(response.data.boardTaskList);
       })
       .catch((error) => console.error(error));
   }, [boardId, editModal]);
@@ -32,7 +42,7 @@ const Board = ({ boardId }: BoardProps) => {
   return (
     <React.Fragment>
       {board ? (
-        <div className={`flex-1 p-2 ${board.color}`}>
+        <div className={`flex-1 p-2 overflow-auto ${board.color}`}>
           <div className='flex justify-between m-4'>
             <h3 className='text-2xl text-white font-bold'>{board.title}</h3>
             <div className='flex'>
@@ -51,10 +61,12 @@ const Board = ({ boardId }: BoardProps) => {
               </button>
             </div>
           </div>
-          <div className='flex'>
-            <div>Hello World</div>
-            <div>Hello World</div>
-            <div>Hello World</div>
+          <div className='flex flex-shrink-0'>
+            {taskLists
+              ? taskLists.map((taskList) => (
+                  <TaskList key={taskList.id} taskList={taskList}></TaskList>
+                ))
+              : null}
           </div>
           {editModal ? (
             <EditBoard setEditModal={setEditModal} board={board}></EditBoard>
