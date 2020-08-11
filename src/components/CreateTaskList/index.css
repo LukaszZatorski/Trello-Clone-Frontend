@@ -1,0 +1,17 @@
+.create-list-enter {
+  opacity: 0;
+  transform: scaleY(0.7);
+}
+.create-list-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 200ms, transform 200ms;
+}
+.create-list-exit {
+  opacity: 1;
+}
+.create-list-exit-active {
+  opacity: 0;
+  transform: scaleY(0.7);
+  transition: opacity 200ms, transform 200ms;
+}

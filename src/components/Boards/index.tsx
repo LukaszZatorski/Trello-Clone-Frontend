@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../../services/apiClient';
 import { Link } from 'react-router-dom';
-import BoardForm from '../BoardForm';
+import CreateBoard from '../CreateBoard';
 
 type Board = {
   id: number;
@@ -10,7 +10,7 @@ type Board = {
   color: string;
 };
 
-type Boards = [Board];
+type Boards = Board[];
 
 const Boards = () => {
   const [boards, setBoards] = useState<Boards>();
@@ -50,7 +50,7 @@ const Boards = () => {
             Create New Board
           </button>
         </div>
-        {modalOn ? <BoardForm setModalOn={setModalOn}></BoardForm> : null}
+        {modalOn ? <CreateBoard setModalOn={setModalOn}></CreateBoard> : null}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import deleteIcon from '../../images/icons8-delete.svg';
 import DeleteBoard from '../DeleteBoard';
 import EditBoard from '../EditBoard';
 import TaskList from '../TaskList';
+import CreateTaskList from '../CreateTaskList';
 
 type BoardProps = {
   boardId: number;
@@ -21,7 +22,7 @@ type TaskList = {
   title: string;
 };
 
-type TaskLists = [TaskList];
+type TaskLists = TaskList[];
 
 const Board = ({ boardId }: BoardProps) => {
   const [board, setBoard] = useState<Board>();
@@ -39,16 +40,21 @@ const Board = ({ boardId }: BoardProps) => {
       .catch((error) => console.error(error));
   }, [boardId, editModal]);
 
+  const updateTaskLists = (taskList: TaskList) => {
+    const updatedTaskLists: TaskLists = [...taskLists!, taskList];
+    setTaskLists(updatedTaskLists);
+  };
+
   return (
     <React.Fragment>
       {board ? (
-        <div className={`flex-1 p-2 overflow-auto ${board.color}`}>
+        <div className={`flex-1 p-2 relative ${board.color}`}>
           <div className='flex justify-between m-4'>
             <h3 className='text-2xl text-white font-bold'>{board.title}</h3>
             <div className='flex'>
               <button
                 onClick={() => setEditModal(true)}
-                className='flex group items-center rounded py-1 px-4 mr-2 text-white bg-gray-200 bg-opacity-25 hover:bg-gray-500 hover:bg-opacity-25 transition ease-in-out duration-150'
+                className='flex items-center rounded py-1 px-4 mr-2 text-white bg-gray-200 bg-opacity-25 hover:bg-gray-500 hover:bg-opacity-25 transition ease-in-out duration-150'
               >
                 Edit
               </button>
@@ -61,12 +67,16 @@ const Board = ({ boardId }: BoardProps) => {
               </button>
             </div>
           </div>
-          <div className='flex flex-shrink-0'>
+          <div className='flex m-2 mt-16 overflow-auto absolute top-0 right-0 bottom-0 left-0'>
             {taskLists
               ? taskLists.map((taskList) => (
                   <TaskList key={taskList.id} taskList={taskList}></TaskList>
                 ))
               : null}
+            <CreateTaskList
+              updateTaskLists={updateTaskLists}
+              boardId={board.id}
+            ></CreateTaskList>
           </div>
           {editModal ? (
             <EditBoard setEditModal={setEditModal} board={board}></EditBoard>
