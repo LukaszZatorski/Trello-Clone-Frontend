@@ -12,8 +12,7 @@ const DeleteBoard = ({ setDeleteModal, boardId }: DeleteBoardProps) => {
   const handleDelete = () => {
     apiClient
       .delete(`/api/boards/${boardId}`)
-      .then((response) => {
-        console.log(response);
+      .then(() => {
         history.push('/boards');
       })
       .catch((error) => {

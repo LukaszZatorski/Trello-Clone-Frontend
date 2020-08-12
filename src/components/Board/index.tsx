@@ -34,14 +34,20 @@ const Board = ({ boardId }: BoardProps) => {
     apiClient
       .get(`/api/boards/${boardId}`)
       .then((response) => {
-        setBoard(response.data.board);
-        setTaskLists(response.data.boardTaskList);
+        setBoard(response.data);
+        setTaskLists(response.data.task_lists);
       })
       .catch((error) => console.error(error));
   }, [boardId, editModal]);
 
-  const updateTaskLists = (taskList: TaskList) => {
-    const updatedTaskLists: TaskLists = [...taskLists!, taskList];
+  const createTaskList = (taskList: TaskList) => {
+    setTaskLists([...taskLists!, taskList]);
+  };
+
+  const deleteTaskList = (taskListId: TaskList['id']) => {
+    const updatedTaskLists = taskLists?.filter(
+      (taskList) => taskList.id !== taskListId,
+    );
     setTaskLists(updatedTaskLists);
   };
 
@@ -70,11 +76,15 @@ const Board = ({ boardId }: BoardProps) => {
           <div className='flex m-2 mt-16 overflow-auto absolute top-0 right-0 bottom-0 left-0'>
             {taskLists
               ? taskLists.map((taskList) => (
-                  <TaskList key={taskList.id} taskList={taskList}></TaskList>
+                  <TaskList
+                    key={taskList.id}
+                    deleteTaskList={deleteTaskList}
+                    taskList={taskList}
+                  ></TaskList>
                 ))
               : null}
             <CreateTaskList
-              updateTaskLists={updateTaskLists}
+              createTaskList={createTaskList}
               boardId={board.id}
             ></CreateTaskList>
           </div>

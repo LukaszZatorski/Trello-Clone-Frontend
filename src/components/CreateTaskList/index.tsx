@@ -6,7 +6,7 @@ import './index.css';
 
 type CreateTaskListProps = {
   boardId: number;
-  updateTaskLists: (taskList: TaskList) => void;
+  createTaskList: (taskList: TaskList) => void;
 };
 
 type TaskList = {
@@ -14,7 +14,7 @@ type TaskList = {
   title: string;
 };
 
-const CreateTaskList = ({ boardId, updateTaskLists }: CreateTaskListProps) => {
+const CreateTaskList = ({ boardId, createTaskList }: CreateTaskListProps) => {
   const [title, setTitle] = useState('');
   const [createList, setCreateList] = useState(false);
   const [showButton, setShowButton] = useState(true);
@@ -31,11 +31,8 @@ const CreateTaskList = ({ boardId, updateTaskLists }: CreateTaskListProps) => {
       })
       .then((response) => {
         setTitle('');
-
         inputElement.current!.focus();
-
-        updateTaskLists(response.data);
-        console.log(response);
+        createTaskList(response.data);
       })
       .catch((error) => {
         console.error(error);
