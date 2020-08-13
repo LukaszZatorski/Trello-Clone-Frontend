@@ -6,7 +6,7 @@ import './index.css';
 
 type CreateTaskListProps = {
   boardId: number;
-  createTaskList: (taskList: TaskList) => void;
+  dispatch: React.Dispatch<any>;
 };
 
 type TaskList = {
@@ -14,7 +14,7 @@ type TaskList = {
   title: string;
 };
 
-const CreateTaskList = ({ boardId, createTaskList }: CreateTaskListProps) => {
+const CreateTaskList = ({ boardId, dispatch }: CreateTaskListProps) => {
   const [title, setTitle] = useState('');
   const [createList, setCreateList] = useState(false);
   const [showButton, setShowButton] = useState(true);
@@ -31,8 +31,8 @@ const CreateTaskList = ({ boardId, createTaskList }: CreateTaskListProps) => {
       })
       .then((response) => {
         setTitle('');
+        dispatch({ type: 'CREATE_TASK_LIST', payload: response.data });
         inputElement.current!.focus();
-        createTaskList(response.data);
       })
       .catch((error) => {
         console.error(error);

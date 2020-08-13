@@ -5,6 +5,7 @@ import checkmark from '../../images/icons8-checkmark.svg';
 type EditBoardProps = {
   setEditModal: React.Dispatch<React.SetStateAction<boolean>>;
   board: Board;
+  dispatch: React.Dispatch<any>;
 };
 
 type Board = {
@@ -14,7 +15,7 @@ type Board = {
   color: string;
 };
 
-const EditBoard = ({ setEditModal, board }: EditBoardProps) => {
+const EditBoard = ({ setEditModal, board, dispatch }: EditBoardProps) => {
   const [title, setTitle] = useState(board.title);
   const [color, setColor] = useState(board.color);
 
@@ -27,8 +28,8 @@ const EditBoard = ({ setEditModal, board }: EditBoardProps) => {
         color: color,
       })
       .then((response) => {
+        dispatch({ type: 'EDIT_BOARD', payload: response.data });
         setEditModal(false);
-        console.log(response);
       })
       .catch((error) => {
         console.error(error);

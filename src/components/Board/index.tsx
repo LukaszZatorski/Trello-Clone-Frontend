@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import apiClient from '../../services/apiClient';
 import deleteIcon from '../../images/icons8-delete.svg';
 import DeleteBoard from '../DeleteBoard';
@@ -15,6 +15,7 @@ type Board = {
   title: string;
   user_id: number;
   color: string;
+  task_lists: TaskLists;
 };
 
 type TaskList = {
@@ -24,9 +25,28 @@ type TaskList = {
 
 type TaskLists = TaskList[];
 
+function boardReducer(state: any, action: any) {
+  switch (action.type) {
+    case 'INITIALIZE':
+      return { ...action.payload };
+    case 'EDIT_BOARD':
+      return { ...state, ...action.payload };
+    case 'CREATE_TASK_LIST':
+      return { ...state, task_lists: [...state.task_lists, action.payload] };
+    case 'DELETE_TASK_LIST':
+      const updatedTaskLists = state.task_lists?.filter(
+        (taskList: TaskList) => taskList.id !== action.payload,
+      );
+      return { ...state, task_lists: updatedTaskLists };
+    case 'EDIT_TASK_LIST':
+      return { ...state, ...action.payload };
+    default:
+      throw new Error();
+  }
+}
+
 const Board = ({ boardId }: BoardProps) => {
-  const [board, setBoard] = useState<Board>();
-  const [taskLists, setTaskLists] = useState<TaskLists>();
+  const [board, dispatch] = useReducer(boardReducer, null);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
 
@@ -34,22 +54,10 @@ const Board = ({ boardId }: BoardProps) => {
     apiClient
       .get(`/api/boards/${boardId}`)
       .then((response) => {
-        setBoard(response.data);
-        setTaskLists(response.data.task_lists);
+        dispatch({ type: 'INITIALIZE', payload: response.data });
       })
       .catch((error) => console.error(error));
-  }, [boardId, editModal]);
-
-  const createTaskList = (taskList: TaskList) => {
-    setTaskLists([...taskLists!, taskList]);
-  };
-
-  const deleteTaskList = (taskListId: TaskList['id']) => {
-    const updatedTaskLists = taskLists?.filter(
-      (taskList) => taskList.id !== taskListId,
-    );
-    setTaskLists(updatedTaskLists);
-  };
+  }, [boardId]);
 
   return (
     <React.Fragment>
@@ -74,22 +82,26 @@ const Board = ({ boardId }: BoardProps) => {
             </div>
           </div>
           <div className='flex m-2 mt-16 overflow-auto absolute top-0 right-0 bottom-0 left-0'>
-            {taskLists
-              ? taskLists.map((taskList) => (
+            {board
+              ? board.task_lists.map((taskList: TaskList) => (
                   <TaskList
                     key={taskList.id}
-                    deleteTaskList={deleteTaskList}
                     taskList={taskList}
+                    dispatch={dispatch}
                   ></TaskList>
                 ))
               : null}
             <CreateTaskList
-              createTaskList={createTaskList}
               boardId={board.id}
+              dispatch={dispatch}
             ></CreateTaskList>
           </div>
           {editModal ? (
-            <EditBoard setEditModal={setEditModal} board={board}></EditBoard>
+            <EditBoard
+              setEditModal={setEditModal}
+              board={board}
+              dispatch={dispatch}
+            ></EditBoard>
           ) : null}
           {deleteModal ? (
             <DeleteBoard

@@ -4,15 +4,15 @@ import deleteListIcon from '../../images/icons8-deletelist.svg';
 
 type TaskListProps = {
   taskList: { id: number; title: string };
-  deleteTaskList: (taskListId: number) => void;
+  dispatch: React.Dispatch<any>;
 };
 
-const TaskList = ({ taskList, deleteTaskList }: TaskListProps) => {
+const TaskList = ({ taskList, dispatch }: TaskListProps) => {
   const handleDelete = () => {
     apiClient
       .delete(`/api/task-lists/${taskList.id}`)
       .then(() => {
-        deleteTaskList(taskList.id);
+        dispatch({ type: 'DELETE_TASK_LIST', payload: taskList.id });
       })
       .catch((error) => {
         console.error(error);
