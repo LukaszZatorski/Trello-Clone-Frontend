@@ -1,11 +1,19 @@
 import React, { useState, SyntheticEvent } from 'react';
 import apiClient from '../../services/apiClient';
 import deleteListIcon from '../../images/icons8-deletelist.svg';
+import Task from '../Task';
+import CreateTask from '../CreateTask';
 
 type TaskListProps = {
-  taskList: { id: number; title: string };
+  taskList: {
+    id: number;
+    title: string;
+    tasks: Task[];
+  };
   dispatch: React.Dispatch<any>;
 };
+
+type Task = { id: number; description: string };
 
 const TaskList = ({ taskList, dispatch }: TaskListProps) => {
   const [editTaskList, setEditTaskList] = useState(false);
@@ -78,8 +86,12 @@ const TaskList = ({ taskList, dispatch }: TaskListProps) => {
             />
           </div>
         )}
-        <div className='mt-2 p-2 bg-white rounded'>Task</div>
-        <div className='mt-2 p-2 bg-white rounded'>Task 2</div>
+        {taskList.tasks
+          ? taskList.tasks.map((task: Task) => (
+              <Task key={task.id} task={task} dispatch={dispatch}></Task>
+            ))
+          : null}
+        <CreateTask taskListId={taskList.id} dispatch={dispatch}></CreateTask>
       </div>
     </div>
   );

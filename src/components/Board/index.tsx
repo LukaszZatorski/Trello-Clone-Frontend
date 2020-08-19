@@ -21,7 +21,10 @@ type Board = {
 type TaskList = {
   id: number;
   title: string;
+  tasks: Task[];
 };
+
+type Task = { id: number; description: string };
 
 type TaskLists = TaskList[];
 
