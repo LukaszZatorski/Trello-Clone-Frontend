@@ -46,6 +46,13 @@ function boardReducer(state: any, action: any) {
         taskList.id === action.payload.id ? action.payload : taskList,
       );
       return { ...state, task_lists: updatedTaskList };
+    case 'CREATE_TASK':
+      const createTask = state.task_lists?.map((taskList: TaskList) =>
+        taskList.id === action.payload.task_list_id
+          ? { ...taskList, tasks: [...taskList.tasks, action.payload] }
+          : taskList,
+      );
+      return { ...state, task_lists: createTask };
     default:
       throw new Error();
   }
