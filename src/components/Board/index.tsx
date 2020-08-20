@@ -53,6 +53,30 @@ function boardReducer(state: any, action: any) {
           : taskList,
       );
       return { ...state, task_lists: createTask };
+    case 'DELETE_TASK':
+      const deleteTask = state.task_lists?.map((taskList: TaskList) => {
+        if (taskList.id === action.payload.task_list_id) {
+          const tasks = taskList.tasks.filter(
+            (task: Task) => task.id !== action.payload.id,
+          );
+          return { ...taskList, tasks: tasks };
+        } else {
+          return taskList;
+        }
+      });
+      return { ...state, task_lists: deleteTask };
+    case 'UPDATE_TASK':
+      const updateTask = state.task_lists?.map((taskList: TaskList) => {
+        if (taskList.id === action.payload.task_list_id) {
+          const tasks = taskList.tasks.map((task: Task) =>
+            task.id === action.payload.id ? action.payload : task,
+          );
+          return { ...taskList, tasks: tasks };
+        } else {
+          return taskList;
+        }
+      });
+      return { ...state, task_lists: updateTask };
     default:
       throw new Error();
   }

@@ -1,6 +1,6 @@
 import React, { useState, SyntheticEvent } from 'react';
 import apiClient from '../../services/apiClient';
-import deleteListIcon from '../../images/icons8-deletelist.svg';
+import deleteIcon from '../../images/icons8-deleteblack.svg';
 import Task from '../Task';
 import CreateTask from '../CreateTask';
 
@@ -79,7 +79,7 @@ const TaskList = ({ taskList, dispatch }: TaskListProps) => {
               {taskList.title}
             </h3>
             <img
-              src={deleteListIcon}
+              src={deleteIcon}
               onClick={handleDelete}
               alt='Delete list'
               className='cursor-pointer'
