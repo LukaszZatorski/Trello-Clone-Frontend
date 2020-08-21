@@ -40,7 +40,7 @@ const Task = ({ task, dispatch }: TaskProps) => {
   return (
     <div
       onDoubleClick={() => setEditTask(true)}
-      className='flex group justify-between mt-2 p-2 bg-white rounded'
+      className='flex group cursor-pointer justify-between mt-2 p-2 bg-white rounded shadow'
     >
       {editTask ? (
         <form

@@ -29,6 +29,7 @@ const App = () => {
   );
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User>();
+  const [navColor, setNavColor] = useState('bg-blue-700');
 
   useEffect(() => {
     if (loggedIn) {
@@ -45,7 +46,9 @@ const App = () => {
   return (
     <Router>
       <div className='min-h-screen flex flex-col'>
-        <nav className='flex p-2 text-white font-bold justify-between bg-blue-700'>
+        <nav
+          className={`flex p-2 text-white font-bold justify-between ${navColor}`}
+        >
           <Link to='/'>Main Page</Link>
           <Link className='opacity-75' to='/'>
             Trello Clone
@@ -82,7 +85,12 @@ const App = () => {
               )}
             </Route>
             <Route path='/boards/:id'>
-              {({ match }) => <Board boardId={match?.params.id}></Board>}
+              {({ match }) => (
+                <Board
+                  setNavColor={setNavColor}
+                  boardId={match?.params.id}
+                ></Board>
+              )}
             </Route>
             <PrivateRoute path='/boards'>
               <Boards></Boards>

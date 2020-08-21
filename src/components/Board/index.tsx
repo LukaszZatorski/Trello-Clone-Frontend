@@ -8,6 +8,7 @@ import CreateTaskList from '../CreateTaskList';
 
 type BoardProps = {
   boardId: number;
+  setNavColor: React.Dispatch<React.SetStateAction<string>>;
 };
 
 type Board = {
@@ -35,7 +36,10 @@ function boardReducer(state: any, action: any) {
     case 'EDIT_BOARD':
       return { ...state, ...action.payload };
     case 'CREATE_TASK_LIST':
-      return { ...state, task_lists: [...state.task_lists, action.payload] };
+      return {
+        ...state,
+        task_lists: [...state.task_lists, { ...action.payload, tasks: [] }],
+      };
     case 'DELETE_TASK_LIST':
       const updatedTaskLists = state.task_lists?.filter(
         (taskList: TaskList) => taskList.id !== action.payload,
@@ -82,7 +86,7 @@ function boardReducer(state: any, action: any) {
   }
 }
 
-const Board = ({ boardId }: BoardProps) => {
+const Board = ({ boardId, setNavColor }: BoardProps) => {
   const [board, dispatch] = useReducer(boardReducer, null);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -91,10 +95,14 @@ const Board = ({ boardId }: BoardProps) => {
     apiClient
       .get(`/api/boards/${boardId}`)
       .then((response) => {
+        setNavColor(response.data.color.replace('600', '700'));
         dispatch({ type: 'INITIALIZE', payload: response.data });
       })
       .catch((error) => console.error(error));
-  }, [boardId]);
+    return () => {
+      setNavColor('bg-blue-800');
+    };
+  }, [boardId, setNavColor]);
 
   return (
     <React.Fragment>

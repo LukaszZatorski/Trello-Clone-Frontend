@@ -71,7 +71,7 @@ const TaskList = ({ taskList, dispatch }: TaskListProps) => {
             />
           </form>
         ) : (
-          <div className='flex justify-between'>
+          <div className='flex cursor-pointer justify-between'>
             <h3
               onClick={() => setEditTaskList(true)}
               className='ml-2 font-semibold'
