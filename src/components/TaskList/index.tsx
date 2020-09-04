@@ -8,14 +8,24 @@ type TaskListProps = {
   taskList: {
     id: number;
     title: string;
-    tasks: Task[];
+    tasks_order: string[];
+    tasks: Record<string, Task>;
   };
   dispatch: React.Dispatch<any>;
+  innerRef: (element: HTMLElement | null) => any;
+  isDraggingOver: boolean;
+  children: React.ReactNode;
 };
 
 type Task = { id: number; description: string };
 
-const TaskList = ({ taskList, dispatch }: TaskListProps) => {
+const TaskList = ({
+  taskList,
+  dispatch,
+  innerRef,
+  isDraggingOver,
+  children,
+}: TaskListProps) => {
   const [editTaskList, setEditTaskList] = useState(false);
   const [title, setTitle] = useState(taskList.title);
 
@@ -48,7 +58,11 @@ const TaskList = ({ taskList, dispatch }: TaskListProps) => {
 
   return (
     <div>
-      <div className='m-2 p-3 bg-gray-200 w-64 rounded-sm flex-shrink-0'>
+      <div
+        className={`m-2 p-3 w-64 rounded-sm flex-shrink-0 ${
+          isDraggingOver ? 'bg-green-200' : 'bg-gray-200'
+        }`}
+      >
         {editTaskList ? (
           <form
             onSubmit={handleSubmit}
@@ -86,12 +100,20 @@ const TaskList = ({ taskList, dispatch }: TaskListProps) => {
             />
           </div>
         )}
-        {taskList.tasks
-          ? taskList.tasks.map((task: Task) => (
-              <Task key={task.id} task={task} dispatch={dispatch}></Task>
-            ))
-          : null}
-        <CreateTask taskListId={taskList.id} dispatch={dispatch}></CreateTask>
+        <div ref={innerRef}>
+          {taskList.tasks_order
+            ? taskList.tasks_order.map((taskId: string, index) => (
+                <Task
+                  key={taskId}
+                  task={taskList.tasks[taskId]}
+                  dispatch={dispatch}
+                  index={index}
+                ></Task>
+              ))
+            : null}
+          {children}
+          <CreateTask taskListId={taskList.id} dispatch={dispatch}></CreateTask>
+        </div>
       </div>
     </div>
   );

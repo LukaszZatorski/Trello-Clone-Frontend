@@ -3,6 +3,7 @@ import apiClient from '../../services/apiClient';
 import checkmark from '../../images/icons8-checkmark.svg';
 
 type EditBoardProps = {
+  setNavColor: React.Dispatch<React.SetStateAction<string>>;
   setEditModal: React.Dispatch<React.SetStateAction<boolean>>;
   board: Board;
   dispatch: React.Dispatch<any>;
@@ -15,7 +16,12 @@ type Board = {
   color: string;
 };
 
-const EditBoard = ({ setEditModal, board, dispatch }: EditBoardProps) => {
+const EditBoard = ({
+  setNavColor,
+  setEditModal,
+  board,
+  dispatch,
+}: EditBoardProps) => {
   const [title, setTitle] = useState(board.title);
   const [color, setColor] = useState(board.color);
 
@@ -28,6 +34,7 @@ const EditBoard = ({ setEditModal, board, dispatch }: EditBoardProps) => {
         color: color,
       })
       .then((response) => {
+        setNavColor(response.data.color.replace('600', '700'));
         dispatch({ type: 'EDIT_BOARD', payload: response.data });
         setEditModal(false);
       })
@@ -82,9 +89,9 @@ const EditBoard = ({ setEditModal, board, dispatch }: EditBoardProps) => {
                     />
                   </label>
                   <label
-                    className='py-3 px-8 mx-2 rounded sm:py-6 sm:px-16 bg-yellow-700'
+                    className='py-3 px-8 mx-2 rounded sm:py-6 sm:px-16 bg-yellow-600'
                     style={
-                      color === 'bg-yellow-700'
+                      color === 'bg-yellow-600'
                         ? {
                             backgroundImage: `url(${checkmark})`,
                             backgroundPosition: 'center',
@@ -96,15 +103,15 @@ const EditBoard = ({ setEditModal, board, dispatch }: EditBoardProps) => {
                     <input
                       type='radio'
                       name='color'
-                      value='bg-yellow-700'
+                      value='bg-yellow-600'
                       onChange={(e) => setColor(e.target.value)}
                       className='appearance-none'
                     />
                   </label>
                   <label
-                    className='py-3 px-8 mx-2 rounded sm:py-6 sm:px-16 bg-green-700'
+                    className='py-3 px-8 mx-2 rounded sm:py-6 sm:px-16 bg-green-600'
                     style={
-                      color === 'bg-green-700'
+                      color === 'bg-green-600'
                         ? {
                             backgroundImage: `url(${checkmark})`,
                             backgroundPosition: 'center',
@@ -116,7 +123,7 @@ const EditBoard = ({ setEditModal, board, dispatch }: EditBoardProps) => {
                     <input
                       type='radio'
                       name='color'
-                      value='bg-green-700'
+                      value='bg-green-600'
                       onChange={(e) => setColor(e.target.value)}
                       className='appearance-none'
                     />
@@ -124,9 +131,9 @@ const EditBoard = ({ setEditModal, board, dispatch }: EditBoardProps) => {
                 </div>
                 <div className='mb-3 sm:mb-6'>
                   <label
-                    className='py-3 px-8 mx-2 rounded sm:py-6 sm:px-16 bg-red-700'
+                    className='py-3 px-8 mx-2 rounded sm:py-6 sm:px-16 bg-red-600'
                     style={
-                      color === 'bg-red-700'
+                      color === 'bg-red-600'
                         ? {
                             backgroundImage: `url(${checkmark})`,
                             backgroundPosition: 'center',
@@ -138,15 +145,15 @@ const EditBoard = ({ setEditModal, board, dispatch }: EditBoardProps) => {
                     <input
                       type='radio'
                       name='color'
-                      value='bg-red-700'
+                      value='bg-red-600'
                       onChange={(e) => setColor(e.target.value)}
                       className='appearance-none'
                     />
                   </label>
                   <label
-                    className='py-3 px-8 mx-2 rounded sm:py-6 sm:px-16 bg-purple-700'
+                    className='py-3 px-8 mx-2 rounded sm:py-6 sm:px-16 bg-purple-600'
                     style={
-                      color === 'bg-purple-700'
+                      color === 'bg-purple-600'
                         ? {
                             backgroundImage: `url(${checkmark})`,
                             backgroundPosition: 'center',
@@ -158,15 +165,15 @@ const EditBoard = ({ setEditModal, board, dispatch }: EditBoardProps) => {
                     <input
                       type='radio'
                       name='color'
-                      value='bg-purple-700'
+                      value='bg-purple-600'
                       onChange={(e) => setColor(e.target.value)}
                       className='appearance-none'
                     />
                   </label>
                   <label
-                    className='py-3 px-8 mx-2 rounded sm:py-6 sm:px-16 bg-pink-700'
+                    className='py-3 px-8 mx-2 rounded sm:py-6 sm:px-16 bg-pink-600'
                     style={
-                      color === 'bg-pink-700'
+                      color === 'bg-pink-600'
                         ? {
                             backgroundImage: `url(${checkmark})`,
                             backgroundPosition: 'center',
@@ -178,7 +185,7 @@ const EditBoard = ({ setEditModal, board, dispatch }: EditBoardProps) => {
                     <input
                       type='radio'
                       name='color'
-                      value='bg-pink-700'
+                      value='bg-pink-600'
                       onChange={(e) => setColor(e.target.value)}
                       className='appearance-none'
                     />
@@ -189,7 +196,7 @@ const EditBoard = ({ setEditModal, board, dispatch }: EditBoardProps) => {
                 <span className='flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto'>
                   <button
                     type='submit'
-                    className='inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5'
+                    className='inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-600 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5'
                   >
                     Update Board
                   </button>
@@ -198,7 +205,7 @@ const EditBoard = ({ setEditModal, board, dispatch }: EditBoardProps) => {
                   <button
                     onClick={() => setEditModal(false)}
                     type='button'
-                    className='inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5'
+                    className='inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-500 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5'
                   >
                     Cancel
                   </button>

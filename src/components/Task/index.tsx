@@ -1,13 +1,15 @@
 import React, { useState, SyntheticEvent } from 'react';
+import { Draggable } from 'react-beautiful-dnd';
 import apiClient from '../../services/apiClient';
 import deleteIcon from '../../images/icons8-deleteblack.svg';
 
 type TaskProps = {
   task: { id: number; description: string };
   dispatch: React.Dispatch<any>;
+  index: number;
 };
 
-const Task = ({ task, dispatch }: TaskProps) => {
+const Task = ({ task, dispatch, index }: TaskProps) => {
   const [editTask, setEditTask] = useState(false);
   const [description, setDescription] = useState(task.description);
 
@@ -38,39 +40,52 @@ const Task = ({ task, dispatch }: TaskProps) => {
       });
   };
   return (
-    <div
-      onDoubleClick={() => setEditTask(true)}
-      className='flex group cursor-pointer justify-between mt-2 p-2 bg-white rounded shadow'
-    >
-      {editTask ? (
-        <form
-          onSubmit={handleSubmit}
-          onBlur={() => {
-            setEditTask(false);
-          }}
-          onKeyDown={(e) => (e.key === 'Escape' ? setEditTask(false) : null)}
+    <Draggable draggableId={`${task.id}`} index={index}>
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          onDoubleClick={() => setEditTask(true)}
+          className={`flex group cursor-pointer justify-between mt-2 p-2 rounded shadow ${
+            snapshot.isDragging ? 'bg-yellow-200' : 'bg-white'
+          }`}
         >
-          <input
-            type='text'
-            name='description'
-            placeholder={description}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            autoFocus
-            required
-            className='w-full p-1 border rounded focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10'
-          />
-        </form>
-      ) : (
-        <p className='break-all'>{task.description}</p>
+          {editTask ? (
+            <form
+              onSubmit={handleSubmit}
+              onBlur={() => {
+                setEditTask(false);
+              }}
+              onKeyDown={(e) =>
+                e.key === 'Escape' ? setEditTask(false) : null
+              }
+            >
+              <input
+                type='text'
+                name='description'
+                placeholder={description}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                autoFocus
+                required
+                className='w-full p-1 border rounded focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10'
+              />
+            </form>
+          ) : (
+            <div className='flex w-full justify-between'>
+              <div className='break-all'>{task.description}</div>
+              <img
+                src={deleteIcon}
+                onClick={handleDelete}
+                alt='Delete task'
+                className='cursor-pointer group-hover:inline-block hidden'
+              />
+            </div>
+          )}
+        </div>
       )}
-      <img
-        src={deleteIcon}
-        onClick={handleDelete}
-        alt='Delete task'
-        className='cursor-pointer group-hover:inline-block hidden'
-      />
-    </div>
+    </Draggable>
   );
 };
 
