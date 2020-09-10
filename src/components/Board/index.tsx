@@ -39,7 +39,7 @@ function boardReducer(state: any, action: any) {
           {
             ...taskList,
             tasks_order:
-              taskList.tasks_order.length > 0
+              taskList.tasks_order && taskList.tasks_order.length > 0
                 ? taskList.tasks_order.trim().split(' ')
                 : [],
             tasks: Object.fromEntries(
@@ -168,7 +168,7 @@ const Board = ({ boardId, setNavColor }: BoardProps) => {
       })
       .catch((error) => console.error(error));
     return () => {
-      setNavColor('bg-blue-800');
+      setNavColor('bg-blue-700');
     };
   }, [boardId, setNavColor]);
 
